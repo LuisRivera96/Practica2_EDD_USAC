@@ -14,58 +14,29 @@ class AVL:
         self.root = None
 
     def add(self,CARNET,NAME):
-        self.root = self.addRecursived(self.root,CARNET,NAME)
+        if self.root is not None:
+            return self.addRecursived(self.root,CARNET,NAME)
+        else:
+            nuevo = nodeAVL(CARNET,NAME)
+            self.root = nuevo    
+        
 
     def addRecursived(self,ROOT,CARNET,NAME):
-        if ROOT is None:
-            nuevo = nodeAVL(CARNET,NAME)
-            return nuevo
         if CARNET < ROOT.CARNE:
-            ROOT.LEFT = self.addRecursived(ROOT.LEFT,CARNET,NAME)
-        if CARNET > ROOT.CARNE:
-            ROOT.RIGHT = self.addRecursived(ROOT.RIGHT,CARNET,NAME)      
+            if ROOT.LEFT is not None:
+                self.addRecursived(ROOT.LEFT,CARNET,NAME)
+            else:
+                nuevo = nodeAVL(CARNET,NAME)
+                ROOT.LEFT = nuevo
+        elif CARNET > ROOT.CARNE:
+            if ROOT.RIGHT is not None:
+                self.addRecursived(ROOT.RIGHT,CARNET,NAME)
+            else:
+                nuevo = nodeAVL(CARNET,NAME)
+                ROOT.RIGHT = nuevo
+        else:
+            print("Ya Ingresado")                        
 
-        ROOT.ALTURA = 1 + max(self.getHeight(ROOT.LEFT),self.getHeight(ROOT.RIGHT))
-        balance = self.getBalance(ROOT)
-
-        if balance > 1 and CARNET < ROOT.LEFT.CARNE:
-            return self.rightRotate(ROOT)
-
-        if balance < -1 and CARNET > ROOT.RIGHT.CARNE:
-            return self.leftRotate(ROOT)
-
-        if balance > 1 and CARNET > ROOT.LEFT.CARNE:
-            ROOT.LEFT = self.leftRotate(ROOT.LEFT)
-            return self.rightRotate(ROOT)
-
-        if balance < -1 and CARNET < ROOT.RIGHT.CARNE:
-            ROOT.RIGHT = self.rightRotate(ROOT.RIGHT)
-            return self.leftRotate(ROOT)
-
-        return ROOT
-            
-                   
-
-
-    
-    def leftRotate(self,z):
-        y = z.RIGHT
-        T2 = y.LEFT
-        y.LEFT = z
-        z.RIGHT = T2
-        z.ALTURA = 1 + max(self.getHeight(z.LEFT),self.getHeight(z.RIGHT))
-        y.ALTURA = 1 + max(self.getHeight(y.LEFT),self.getHeight(y.RIGHT))
-        return y
-
-    
-    def rightRotate(self,z):
-        y = z.LEFT
-        T3 = y.RIGHT
-        y.RIGHT = z
-        z.LEFT = T3
-        z.ALTURA = 1 + max(self.getHeight(z.LEFT),self.getHeight(z.RIGHT))
-        y.ALTURA = 1 + max(self.getHeight(y.LEFT),self.getHeight(y.RIGHT))
-        return y
 
     def getHeight(self,RAIZ):
         if RAIZ is None:
@@ -208,9 +179,9 @@ class AVL:
         if ROOT is not None:
             if ROOT.RIGHT is not None or ROOT.LEFT is not None:
                 Dot = Dot + str(ROOT.CARNE) + ":f" + str(ROOT.CARNE) + "[id=" + str(ROOT.CARNE) + ", color=\"blue\"]; \n"
-                Dot = Dot + str(ROOT.CARNE) + "[label=\" <N " + str(ROOT.CARNE)+ " " + ROOT.NAME + " I> | <f" + str(ROOT.CARNE) + "> " + str(ROOT.CARNE) + "\\n" + " | <f" + str(ROOT.CARNE) + "D> \" shape=\"record\"];\n"
+                Dot = Dot + str(ROOT.CARNE) + "[label=\" <N " + str(ROOT.CARNE)+ " I> | <f" + str(ROOT.CARNE) + "> " + str(ROOT.CARNE)+ "\\n" + ROOT.NAME  + " | <f" + str(ROOT.CARNE) + "D> \" shape=\"record\"];\n"
             else:
-                Dot = Dot + str(ROOT.CARNE) + ":f " + str(ROOT.CARNE) + "[id=" + str(ROOT.CARNE) + ", color=\"blue\" shape=\"rectangle\"]; \n"
+                Dot = Dot + str(ROOT.CARNE) + ":f " + str(ROOT.CARNE) + "[label=\"" + str(ROOT.CARNE)+ "\\n" + ROOT.NAME + "\", color=\"blue\" shape=\"rectangle\"]; \n"
 
             a = self.graficar(ROOT.LEFT)
             if a is not "":
@@ -236,6 +207,15 @@ class AVL:
         os.system('AVL.png')        
 
                 
+prueba = AVL()
+prueba.add(10,"LUIS")
+prueba.add(20,"LUIS2")
+prueba.add(30,"LUIS3")
+prueba.add(40,"LUIS4")
+prueba.add(50,"LUIS5")
+prueba.add(25,"LUIS6")
+prueba.getGrafica()
+
 
 
 

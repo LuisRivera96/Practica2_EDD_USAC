@@ -19,15 +19,23 @@ dataA = ""
 #
 
 class Menu:
-    
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    if len(sys.argv) != 3:
+	    print ("Correct usage: script, IP address, port number")
+	    exit()
+    IP_address = str(sys.argv[1])
+    Port = int(sys.argv[2])
+    server.connect((IP_address, Port))
+
     def menuP(self):
-        os.system("cmd /c cls")
+        #os.system("cmd /c cls")
         print("############################################################")
         print("###################### MAIN MENU ###########################")
         print("1. Insert Block")
         print("2. Select Block")
         print("3. Reports")
-        print("4. Salir")
+        print("4. Modo Escucha")
+        print("5. Salir")
         opcion = input()
         if opcion  == '1':
             block = self.crearBloque()
@@ -38,9 +46,12 @@ class Menu:
         elif opcion == '3':
             self.menuReportes()
         elif opcion == '4':
+            self.modoEscucha()
+            
+        elif opcion == '5':
             sys.exit()
         else:
-            self.menuP()
+            self.menuP()    
 
     def selectBloque(self):
         os.system("cmd /c cls")
@@ -161,12 +172,25 @@ class Menu:
             jsonB = "{\"INDEX\": "+str(indexB)+",\n"+"\"TIMESTAMP\": \""+timeA+"\",\n\"CLASS\": \""+clase+"\",\n\"DATA\": "+dataA+",\n\"PREVIOUSHASH\": \""+cadena.end.HASH+"\",\n\"HASH\": \""+hashN+"\"\n}"
             return jsonB
 
+
     def encrypt_string(self,string,string2,string3,string4,string5):
         string6 = string+string2+string3+string4,string5
         sha_encyption = hashlib.sha256(str(string6).encode()).hexdigest()
         return sha_encyption
 
-    
+    def modoEscucha(self):
+        while True:
+            read_sockets = select.select([server],[],[],1)[0]
+            import msvcrt
+            if msvcrt.kbhit(): read_sockets.append(sys.stdin)
+
+            for socks in read_sockets:
+                if socks == server:
+                    message = socks.recv(2048)
+                    mensaje = message.decode('utf-8')
+                    print(mensaje)
+        
+        
 
 
 
