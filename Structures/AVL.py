@@ -62,12 +62,7 @@ class AVL:
             return self.BusquedaR(ROOT.RIGHT,CARNE)
 
 
-    def balanced(self,ROOT):
-        if ROOT is not None:
-            self.balanced(ROOT.LEFT)
-            if self.getBalance(ROOT) > 1 or self.getBalance(ROOT) < -1:
-                return FalseS
-            self.balanced(ROOT.RIGHT)        
+        
 
     #RECORRIDOS
     #########################INORDEN#########################
@@ -86,7 +81,7 @@ class AVL:
         DotInor = ""
         if ROOT is not None:
             DotInor = DotInor + self.gInorden(ROOT.LEFT)
-            DotInor = DotInor + ROOT.CARNE + "[label=\""+ ROOT.CARNE +" "+ROOT.NAME+"\"];\n"
+            DotInor = DotInor + ROOT.CARNE + "[label=\""+ ROOT.CARNE +"\\n"+ROOT.NAME+"\"];\n"
             DotInor = DotInor + self.gInorden(ROOT.RIGHT)
         return DotInor
 
@@ -119,7 +114,7 @@ class AVL:
     def gPreorden(self,ROOT):
         DotPreor = ""
         if ROOT is not None:
-            DotPreor = DotPreor + ROOT.CARNE + "[label=\""+ ROOT.CARNE +" "+ROOT.NAME+"\"];\n"
+            DotPreor = DotPreor + ROOT.CARNE + "[label=\""+ ROOT.CARNE +"\\n"+ROOT.NAME+"\"];\n"
             DotPreor = DotPreor + self.gPreorden(ROOT.LEFT)
             DotPreor = DotPreor + self.gPreorden(ROOT.RIGHT)
         return DotPreor
@@ -155,7 +150,7 @@ class AVL:
         if ROOT is not None:
             DotPosor = DotPosor + self.gPosorden(ROOT.LEFT)
             DotPosor = DotPosor + self.gPosorden(ROOT.RIGHT)
-            DotPosor = DotPosor + ROOT.CARNE + "[label=\""+ ROOT.CARNE +" "+ROOT.NAME+"\"];\n"
+            DotPosor = DotPosor + ROOT.CARNE + "[label=\""+ ROOT.CARNE +"\\n"+ROOT.NAME+"\"];\n"
         return DotPosor
 
     def getGraphPoso(self):
@@ -179,9 +174,9 @@ class AVL:
         if ROOT is not None:
             if ROOT.RIGHT is not None or ROOT.LEFT is not None:
                 Dot = Dot + str(ROOT.CARNE) + ":f" + str(ROOT.CARNE) + "[id=" + str(ROOT.CARNE) + ", color=\"blue\"]; \n"
-                Dot = Dot + str(ROOT.CARNE) + "[label=\" <N " + str(ROOT.CARNE)+ " I> | <f" + str(ROOT.CARNE) + "> " + str(ROOT.CARNE)+ "\\n" + ROOT.NAME  + " | <f" + str(ROOT.CARNE) + "D> \" shape=\"record\"];\n"
+                Dot = Dot + str(ROOT.CARNE) + "[label=\" <N " + str(ROOT.CARNE)+ " I> | <f" + str(ROOT.CARNE) + "> " + str(ROOT.CARNE)+ "\\n" + ROOT.NAME + "\\n" + str(ROOT.ALTURA) + "\\n" + str(ROOT.FE)  + " | <f" + str(ROOT.CARNE) + "D> \" shape=\"record\"];\n"
             else:
-                Dot = Dot + str(ROOT.CARNE) + ":f " + str(ROOT.CARNE) + "[label=\"" + str(ROOT.CARNE)+ "\\n" + ROOT.NAME + "\", color=\"blue\" shape=\"rectangle\"]; \n"
+                Dot = Dot + str(ROOT.CARNE) + ":f " + str(ROOT.CARNE) + "[label=\"" + str(ROOT.CARNE)+ "\\n" + ROOT.NAME + "\\n" + str(ROOT.ALTURA) + "\\n" + str(ROOT.FE) + "\", color=\"blue\" shape=\"rectangle\"]; \n"
 
             a = self.graficar(ROOT.LEFT)
             if a is not "":
@@ -207,14 +202,7 @@ class AVL:
         os.system('AVL.png')        
 
                 
-prueba = AVL()
-prueba.add(10,"LUIS")
-prueba.add(20,"LUIS2")
-prueba.add(30,"LUIS3")
-prueba.add(40,"LUIS4")
-prueba.add(50,"LUIS5")
-prueba.add(25,"LUIS6")
-prueba.getGrafica()
+
 
 
 

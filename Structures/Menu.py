@@ -5,9 +5,11 @@ import csv
 import socket
 import select
 import tkinter as tk
+import json
+import msvcrt
 from datetime import datetime
-from Chain import*
-from AVL import*
+from Chain import *
+from AVL import *
 
 
 #var
@@ -16,16 +18,18 @@ cadena = Chain()
 indexB = 0
 clase = ""
 dataA = ""
+mensaje = ''
 #
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+if len(sys.argv) != 3:
+    print ("Correct usage: script, IP address, port number")
+    exit()
+IP_address = str(sys.argv[1])
+Port = int(sys.argv[2])
+server.connect((IP_address, Port))
 
 class Menu:
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    if len(sys.argv) != 3:
-	    print ("Correct usage: script, IP address, port number")
-	    exit()
-    IP_address = str(sys.argv[1])
-    Port = int(sys.argv[2])
-    server.connect((IP_address, Port))
+    
 
     def menuP(self):
         #os.system("cmd /c cls")
@@ -39,15 +43,55 @@ class Menu:
         opcion = input()
         if opcion  == '1':
             block = self.crearBloque()
-            print(block)
-            self.keypress() 
+            diccionario = json.loads(block)
+            indexD = diccionario['INDEX']
+            timeD = diccionario['TIMESTAMP']
+            classD = diccionario['CLASS']
+            dataD = diccionario['DATA']
+            previousD = diccionario['PREVIOUSHASH']
+            hashD = diccionario['HASH']
+            #validar arbol
+            if block != '':
+                server.sendall(block.encode('utf-8'))    
+            msj2 = self.modoEscucha()
+            if msj2 != '':
+                if msj2 == 'true':
+                    cadena.add(indexB,timeD,classD,dataD,previousD,hashD)
+                    indexB = indexB + 1
+                    self.menuP()
+                else:
+                    print('NO SE AGREGARA A LA CADENA')
+                    self.menuP()
         elif opcion == '2':
-            print("bloques")
+            self.selectBloque()
         elif opcion == '3':
             self.menuReportes()
         elif opcion == '4':
-            self.modoEscucha()
-            
+            msj = self.modoEscucha()
+            if msj != 'true' and msj != 'false':
+                diccionario = json.loads(msj)
+                indexD = diccionario['INDEX']
+                timeD = diccionario['TIMESTAMP']
+                classD = diccionario['CLASS']
+                dataD = diccionario['DATA']
+                previousD = diccionario['PREVIOUSHASH']
+                hashD = diccionario['HASH']
+                #validar arbol
+                #valida HASH
+                hashT = self.encrypt_string(indexD,timeD,classD,dataD,previousD)
+                if hashT == hashD:
+                    server.sendall('true'.encode('utf-8'))
+                else:
+                    server.sendall('false'.encode('utf-8'))
+                msj = self.modoEscucha()
+                if msj == 'true' or msj == 'false':
+                    if msj == 'true':
+                        cadena.add(indexB,timeD,classD,dataD,previousD,hashD)
+                        indexB = indexB + 1
+                        self.menuP()
+                    else:
+                        print('NO SE AGREGARA A LA CADENA')
+                        self.menuP()
         elif opcion == '5':
             sys.exit()
         else:
@@ -57,25 +101,38 @@ class Menu:
         os.system("cmd /c cls")
         print("############################################################")
         print("###################### SELECT BLOCK ###########################")
-        if self.cadena.head is not None:
-            print('INDEX: '+self.cadena.head.INDEX)
-            print('TIMESTAMP: '+self.cadena.head.TIMESTAMP)
-            print('CLASS: '+self.cadena.head.CLASS)
-            print('DATA: '+self.cadena.head.DATA[0:50])
-            print('PREVIOUSHASH: '+self.cadena.head.PREVIOUSHASH)
-            print('HASH: '+self.cadena.head.HASH)
+        bloqueActual = cadena.head
+        if cadena.head is not None:
+            print('INDEX: '+bloqueActual.INDEX)
+            print('TIMESTAMP: '+bloqueActual.TIMESTAMP)
+            print('CLASS: '+bloqueActual.CLASS)
+            print('DATA: '+bloqueActual.DATA[0:50])
+            print('PREVIOUSHASH: '+bloqueActual.PREVIOUSHASH)
+            print('HASH: '+bloqueActual.HASH)
+        while self.keypress != '\r':
+            if self.keypress == 'xe0':
+                bloqueActual = bloqueActual.next
+                os.system("cmd /c cls")
+                print('INDEX: '+bloqueActual.INDEX)
+                print('TIMESTAMP: '+bloqueActual.TIMESTAMP)
+                print('CLASS: '+bloqueActual.CLASS)
+                print('DATA: '+bloqueActual.DATA[0:50])
+                print('PREVIOUSHASH: '+bloqueActual.PREVIOUSHASH)
+                print('HASH: '+bloqueActual.HASH)
+            if self.keypress == '\r':
+                #mandar data al arbol
+                arbol.root = None
+                #llenar arbol
+                self.menuP()
 
-            
-    def keypress(self,event):
-        if event.keypress == 'KEY_RIGHT':
-            print("derecha")
-        elif event.keypress == 'KEY_LEFT':
-            print("izquierda")
-        elif event.keypress == 'KEY_ENTER':
-            print("enter")        
-            
 
-
+                        
+    def keypress(self):    
+        while True:
+            if msvcrt.kbhit():
+                key = msvcrt.getch()
+                return key
+               
 
     def menuReportes(self):
         os.system("cmd /c cls")
@@ -87,6 +144,7 @@ class Menu:
         opcion = input()
         if opcion  == '1':
             cadena.graphiz()
+            self.menuReportes()
         elif opcion == '2':
             self.reportesTree()
         elif opcion == '3':
@@ -103,6 +161,7 @@ class Menu:
         opcion = input()
         if opcion  == '1':
             arbol.getGrafica()
+            self.reportesTree()
         elif opcion == '2':
             os.system("cmd /c cls")
             print("############################################################")
@@ -153,9 +212,8 @@ class Menu:
         clase = datos[0]
         global dataA
         dataA = datos[1]        
-        print("clase= "+datos[0])
-        print("data= "+datos[1]) 
-        #self.menuP()    
+        
+           
   
     def crearBloque(self):
         self.bulkL()
@@ -163,13 +221,13 @@ class Menu:
             now = datetime.now()
             timeA = now.strftime("%d-%m-%Y::%H:%M:%S")
             hashN = self.encrypt_string(str(indexB),timeA,clase,dataA,'0000')
-            jsonB = "{\"INDEX\": "+str(indexB)+",\n"+"\"TIMESTAMP\": \""+timeA+"\",\n\"CLASS\": \""+clase+"\",\n\"DATA\": "+dataA+",\n\"PREVIOUSHASH\": \"0000\",\n\"HASH\": \""+hashN+"\"\n}"
+            jsonB = "{\"INDEX\": "+str(indexB)+","+"\"TIMESTAMP\": \""+timeA+"\",\"CLASS\": \""+clase+"\",\"DATA\": "+dataA+",\"PREVIOUSHASH\": \"0000\",\"HASH\": \""+hashN+"\"}"
             return jsonB
         else:
             now = datetime.now()
             timeA = now.strftime("%d-%m-%Y::%H:%M:%S")
             hashN = self.encrypt_string(str(indexB),timeA,clase,dataA,cadena.end.HASH)
-            jsonB = "{\"INDEX\": "+str(indexB)+",\n"+"\"TIMESTAMP\": \""+timeA+"\",\n\"CLASS\": \""+clase+"\",\n\"DATA\": "+dataA+",\n\"PREVIOUSHASH\": \""+cadena.end.HASH+"\",\n\"HASH\": \""+hashN+"\"\n}"
+            jsonB = "{\"INDEX\": "+str(indexB)+","+"\"TIMESTAMP\": \""+timeA+"\",\"CLASS\": \""+clase+"\",\"DATA\": "+dataA+",\"PREVIOUSHASH\": \""+cadena.end.HASH+"\",\"HASH\": \""+hashN+"\"}"
             return jsonB
 
 
@@ -178,25 +236,31 @@ class Menu:
         sha_encyption = hashlib.sha256(str(string6).encode()).hexdigest()
         return sha_encyption
 
+    #CLIENTE-SERVIDOR
     def modoEscucha(self):
-        while True:
+        global mensaje
+        mensaje = ''
+        while mensaje is '':
             read_sockets = select.select([server],[],[],1)[0]
             import msvcrt
             if msvcrt.kbhit(): read_sockets.append(sys.stdin)
-
             for socks in read_sockets:
                 if socks == server:
                     message = socks.recv(2048)
-                    mensaje = message.decode('utf-8')
-                    print(mensaje)
+                    if message.decode('utf-8') != 'Welcome to [EDD]Blockchain Project!' and message.decode('utf-8') == 'true':
+                        mensajeR = message.decode('utf-8')
+                        mensaje = mensajeR
+                        return mensaje
+                    elif message.decode('utf-8') != 'Welcome to [EDD]Blockchain Project!' and message.decode('utf-8') == 'false':
+                        mensajeR = message.decode('utf-8')
+                        mensaje = mensajeR
+                        return mensaje
+                    elif message.decode('utf-8') != 'Welcome to [EDD]Blockchain Project!' and message.decode('utf-8') != 'false' and message.decode('utf-8') != 'true':
+                        mensajeR = message.decode('utf-8')
+                        mensaje = mensajeR
+                        return mensaje      
         
-        
-
-
-
-    #CLIENTE-SERVIDOR
-
-
+    
 prueba = Menu()
 prueba.menuP()
 

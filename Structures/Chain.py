@@ -50,12 +50,12 @@ class Chain:
             temp = self.head
             count = 0
             while temp.next is not None:
-                f.write('node{} [label=\"Class = {} TimeStamp={} PHASH={} HASH={} \"];\n'.format(count,temp.CLASS,temp.TIMESTAMP,temp.PREVIOUSHASH,temp.HASH))
+                f.write('node{} [label=\"Class = {}'+'\\n'+'TimeStamp={}'+'\\n'+'PHASH={}'+'\\n'+'HASH={} \"];\n'.format(count,temp.CLASS,temp.TIMESTAMP,temp.PREVIOUSHASH,temp.HASH))
                 count+=1
                 f.write('node{} -> node{};\n'.format(count-1,count))
                 f.write('node{} -> node{};\n'.format(count,count-1))
                 temp = temp.next
-            f.write('node{} [label=\"Class = {} TimeStamp={} PHASH={} HASH={} \"];\n'.format(count,temp.CLASS,temp.TIMESTAMP,temp.PREVIOUSHASH,temp.HASH))
+            f.write('node{} [label=\"Class = {}'+'\\n'+'TimeStamp={}'+'\\n'+'PHASH={}'+'\\n'+'HASH={} \"];\n'.format(count,temp.CLASS,temp.TIMESTAMP,temp.PREVIOUSHASH,temp.HASH))
             f.write('}')
             f.close()
             os.system('dot Blockchain.dot -Tpng -o Blockchain.png')
