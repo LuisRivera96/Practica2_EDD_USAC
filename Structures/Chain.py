@@ -7,7 +7,7 @@ class Block:
         self.CLASS = CLASS
         self.DATA = DATA
         self.PREVIOUSHASH = PREVIOUSHASH
-        self.HASH
+        self.HASH = HASH
         self.next = None
         self.previous = None
 

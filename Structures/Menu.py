@@ -51,15 +51,18 @@ class Menu:
             previousD = diccionario['PREVIOUSHASH']
             hashD = diccionario['HASH']
             #validar arbol
+            dataD2 = json.dumps(dataD)
             if block != '':
                 server.sendall(block.encode('utf-8'))    
             msj2 = self.modoEscucha()
             if msj2 != '':
                 if msj2 == 'true':
-                    cadena.add(indexB,timeD,classD,dataD,previousD,hashD)
-                    indexB = indexB + 1
+                    cadena.add(indexD,timeD,classD,dataD2,previousD,hashD)
+                    global indexB
+                    indexB += 1
+                    print('SE AGREGO A LA CADENA')
                     self.menuP()
-                else:
+                elif msj2 == 'false':
                     print('NO SE AGREGARA A LA CADENA')
                     self.menuP()
         elif opcion == '2':
@@ -69,7 +72,7 @@ class Menu:
         elif opcion == '4':
             msj = self.modoEscucha()
             if msj != 'true' and msj != 'false':
-                diccionario = json.loads(msj)
+                diccionario = json.loads(msj.rstrip())
                 indexD = diccionario['INDEX']
                 timeD = diccionario['TIMESTAMP']
                 classD = diccionario['CLASS']
@@ -78,7 +81,10 @@ class Menu:
                 hashD = diccionario['HASH']
                 #validar arbol
                 #valida HASH
-                hashT = self.encrypt_string(indexD,timeD,classD,dataD,previousD)
+                dataD2 = json.dumps(dataD,separators=(',',':'))
+                hashT = self.encrypt_string(str(indexD)+timeD+classD+dataD2+previousD)
+                print(hashD)
+                print(hashT)
                 if hashT == hashD:
                     server.sendall('true'.encode('utf-8'))
                 else:
@@ -86,10 +92,11 @@ class Menu:
                 msj = self.modoEscucha()
                 if msj == 'true' or msj == 'false':
                     if msj == 'true':
-                        cadena.add(indexB,timeD,classD,dataD,previousD,hashD)
-                        indexB = indexB + 1
+                        cadena.add(indexD,timeD,classD,dataD2,previousD,hashD)
+                        print('SE AGREGO A LA CADENA')
+                        indexB  += 1
                         self.menuP()
-                    else:
+                    elif msj == 'false':
                         print('NO SE AGREGARA A LA CADENA')
                         self.menuP()
         elif opcion == '5':
@@ -211,7 +218,8 @@ class Menu:
         global clase
         clase = datos[0]
         global dataA
-        dataA = datos[1]        
+        dataA = datos[1]
+                
         
            
   
@@ -220,20 +228,19 @@ class Menu:
         if indexB is 0:
             now = datetime.now()
             timeA = now.strftime("%d-%m-%Y::%H:%M:%S")
-            hashN = self.encrypt_string(str(indexB),timeA,clase,dataA,'0000')
+            hashN = self.encrypt_string(str(indexB)+timeA+clase+dataA+'0000')
             jsonB = "{\"INDEX\": "+str(indexB)+","+"\"TIMESTAMP\": \""+timeA+"\",\"CLASS\": \""+clase+"\",\"DATA\": "+dataA+",\"PREVIOUSHASH\": \"0000\",\"HASH\": \""+hashN+"\"}"
             return jsonB
         else:
             now = datetime.now()
             timeA = now.strftime("%d-%m-%Y::%H:%M:%S")
-            hashN = self.encrypt_string(str(indexB),timeA,clase,dataA,cadena.end.HASH)
+            hashN = self.encrypt_string(str(indexB)+timeA+clase+dataA+cadena.end.HASH)
             jsonB = "{\"INDEX\": "+str(indexB)+","+"\"TIMESTAMP\": \""+timeA+"\",\"CLASS\": \""+clase+"\",\"DATA\": "+dataA+",\"PREVIOUSHASH\": \""+cadena.end.HASH+"\",\"HASH\": \""+hashN+"\"}"
             return jsonB
 
 
-    def encrypt_string(self,string,string2,string3,string4,string5):
-        string6 = string+string2+string3+string4,string5
-        sha_encyption = hashlib.sha256(str(string6).encode()).hexdigest()
+    def encrypt_string(self,string):
+        sha_encyption = hashlib.sha256(string.encode()).hexdigest()
         return sha_encyption
 
     #CLIENTE-SERVIDOR
