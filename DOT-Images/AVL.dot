@@ -2,14 +2,14 @@ digraph AVL{
 compound=true;
 node[shape="Mrecord"];
 201602869:f201602869[id=201602869, color="blue"]; 
-201602869[label=" <N 201602869 I> | <f201602869> Carne: 201602869\nNombre: Chriss\nAltura: 1\nFE: 0 | <f201602869D> " shape="record"];
+201602869[label=" <N 201602869 I> | <f201602869> Carne: 201602869\nNombre: Chriss\nAltura: 3\nFE: 0 | <f201602869D> " shape="record"];
 "201602869" : N201602869I ->  20102321:f20102321[id=20102321, color="blue"]; 
-20102321[label=" <N 20102321 I> | <f20102321> Carne: 20102321\nNombre: estudiante8\nAltura: 1\nFE: 0 | <f20102321D> " shape="record"];
+20102321[label=" <N 20102321 I> | <f20102321> Carne: 20102321\nNombre: estudiante8\nAltura: 2\nFE: 0 | <f20102321D> " shape="record"];
 "20102321" : f20102321D ->  20130265:f20130265[id=20130265, color="blue"]; 
 20130265[label=" <N 20130265 I> | <f20130265> Carne: 20130265\nNombre: Lucas\nAltura: 1\nFE: 0 | <f20130265D> " shape="record"];
-"20130265" : N20130265I ->  201203654:f 201203654[label="Carne: 201203654\nNombre: Estudiante9\nAltura: 1\nFE: 0", color="blue" shape="rectangle"]; 
-"20130265" : f20130265D ->  20152321:f 20152321[label="Carne: 20152321\nNombre: Jorge\nAltura: 1\nFE: 0", color="blue" shape="rectangle"]; 
+"20130265" : N20130265I ->  201203654:f 201203654[label="Carne: 201203654\nNombre: Estudiante9\nAltura: 0\nFE: 0", color="blue" shape="rectangle"]; 
+"20130265" : f20130265D ->  20152321:f 20152321[label="Carne: 20152321\nNombre: Jorge\nAltura: 0\nFE: 0", color="blue" shape="rectangle"]; 
 "201602869" : f201602869D ->  201605462:f201605462[id=201605462, color="blue"]; 
 201605462[label=" <N 201605462 I> | <f201605462> Carne: 201605462\nNombre: Mario\nAltura: 1\nFE: 0 | <f201605462D> " shape="record"];
-"201605462" : f201605462D ->  202013652:f 202013652[label="Carne: 202013652\nNombre: Lupe\nAltura: 1\nFE: 0", color="blue" shape="rectangle"]; 
+"201605462" : f201605462D ->  202013652:f 202013652[label="Carne: 202013652\nNombre: Lupe\nAltura: 0\nFE: 0", color="blue" shape="rectangle"]; 
 }
