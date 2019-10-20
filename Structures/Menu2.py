@@ -151,12 +151,6 @@ class Menu:
                     self.menuP()
 
 
-                        
-    def keypress(self): 
-        while True:
-            if msvcrt.kbhit():
-                key = msvcrt.getch()
-                return key
                
 
     def menuReportes(self):
