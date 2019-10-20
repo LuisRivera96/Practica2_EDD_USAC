@@ -38,15 +38,24 @@ class AVL:
             print("Ya Ingresado")                        
 
 
-    def getHeight(self,RAIZ):
-        if RAIZ is None:
-            return 0
-        return RAIZ.ALTURA 
+    def actualizarAltura(self):
+        self.nodoAltura(self.root)
 
-    def getBalance(self,RAIZ):
-        if RAIZ is None:
-            return 0
-        return self.getHeight(RAIZ.LEFT) - self.getHeight(RAIZ.RIGHT)              
+    def nodoAltura(self,ROOT):
+        if ROOT is not None:
+            self.nodoAltura(ROOT.LEFT)
+            self.nodoAltura(ROOT.RIGHT)
+            self.actualizarAlturaR(ROOT)
+
+    def actualizarAlturaR(self,ROOT):
+        if ROOT is not None:
+            ROOT.ALTURA = max(self.altura(ROOT.LEFT),self.altura(ROOT.RIGHT)) + 1
+            
+    def altura(self,ROOT):
+        if ROOT is None:
+            return -1
+        else:
+            return ROOT.ALTURA    
 
     #BUSQUEDA
     def Busqueda(self,CARNE):
@@ -226,6 +235,7 @@ class AVL:
         return Dot    
 
     def getGrafica(self):
+        self.actualizarAltura()
         dot = ""
         dot = dot + "digraph AVL{\n"
         dot = dot + "compound=true;\n"
