@@ -119,32 +119,41 @@ class Menu:
             print('DATA: '+bloqueActual.DATA[0:50])
             print('PREVIOUSHASH: '+bloqueActual.PREVIOUSHASH)
             print('HASH: '+bloqueActual.HASH)
-            tecla = self.keypress()
-        while tecla != '\r':
-            tecla = self.keypress()
-            if tecla == 'xe0':
-                bloqueActual = bloqueActual.next
-                os.system("cmd /c cls")
-                print('INDEX: '+str(bloqueActual.INDICE))
-                print('TIMESTAMP: '+bloqueActual.TIMESTAMP)
-                print('CLASS: '+bloqueActual.CLASS)
-                print('DATA: '+bloqueActual.DATA[0:50])
-                print('PREVIOUSHASH: '+bloqueActual.PREVIOUSHASH)
-                print('HASH: '+bloqueActual.HASH)
-            tecla2 = self.keypress()    
-            if tecla2 == '\r':
-                #mandar data al arbolS
-                #llenar arbol
-                arbol.root = None
-                self.insertArbol(json.loads(bloqueActual.DATA))
-                tecla = tecla2
-                self.menuP()
+        while True:
+            if msvcrt.kbhit():
+                key = msvcrt.getch()
+                #print('Impresion_'+str(key))
+                if str(key) == 'b\'M\'':
+                    if bloqueActual.next is not None:
+                        bloqueActual = bloqueActual.next
+                        os.system("cmd /c cls")
+                        print('INDEX: '+str(bloqueActual.INDICE))
+                        print('TIMESTAMP: '+bloqueActual.TIMESTAMP)
+                        print('CLASS: '+bloqueActual.CLASS)
+                        print('DATA: '+bloqueActual.DATA[0:50])
+                        print('PREVIOUSHASH: '+bloqueActual.PREVIOUSHASH)
+                        print('HASH: '+bloqueActual.HASH)
+                elif str(key) == 'b\'K\'':
+                    if bloqueActual.previous is not None:
+                        bloqueActual = bloqueActual.previous
+                        os.system("cmd /c cls")
+                        print('INDEX: '+str(bloqueActual.INDICE))
+                        print('TIMESTAMP: '+bloqueActual.TIMESTAMP)
+                        print('CLASS: '+bloqueActual.CLASS)
+                        print('DATA: '+bloqueActual.DATA[0:50])
+                        print('PREVIOUSHASH: '+bloqueActual.PREVIOUSHASH)
+                        print('HASH: '+bloqueActual.HASH)
+                elif str(key) == 'b\'\\r\'':
+                    #mandar data al arbolS
+                    #llenar arbol
+                    arbol.root = None
+                    self.insertArbol(json.loads(bloqueActual.DATA))
+                    self.menuP()
 
 
                         
-    def keypress(self):
-        key = ''  
-        while key is '':
+    def keypress(self): 
+        while True:
             if msvcrt.kbhit():
                 key = msvcrt.getch()
                 return key
