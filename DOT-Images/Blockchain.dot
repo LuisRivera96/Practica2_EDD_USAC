@@ -1,0 +1,8 @@
+digraph firsGraph{
+node [shape=record];
+rankdir=UD;
+node0 [label="Class = Fisica\nTimeStamp=20-10-2019::14:06:26\nPHASH=0000\nHASH=ae3fca7887d7aafe643aa3bb2418f70eb6d317d814d91a17d8a160f0ce4f7d88 "];
+node0 -> node1;
+node1 -> node0;
+node1 [label="Class = Compi\nTimeStamp=20-10-2019::14:06:36\nPHASH=ae3fca7887d7aafe643aa3bb2418f70eb6d317d814d91a17d8a160f0ce4f7d88\nHASH=efadb8710811ec6acc6eadc96063edb9792ae393c6ceea3561982ec240ba4f59 "];
+}
