@@ -51,7 +51,7 @@ class Menu:
             previousD = diccionario['PREVIOUSHASH']
             hashD = diccionario['HASH']
             #validar arbol
-            #self.insertArbol(dataD)
+            self.insertArbol(dataD)
             #
             dataD2 = json.dumps(dataD)
             if block != '':
@@ -82,7 +82,7 @@ class Menu:
                 previousD = diccionario['PREVIOUSHASH']
                 hashD = diccionario['HASH']
                 #validar arbol
-                #self.insertArbol(dataD)
+                self.insertArbol(dataD)
                 #valida HASH
                 dataD2 = json.dumps(dataD,separators=(',',':'))
                 hashT = self.encrypt_string(str(indexD)+timeD+classD+dataD2+previousD)
@@ -182,33 +182,24 @@ class Menu:
             os.system("cmd /c cls")
             print("############################################################")
             print("###################### RECORRIDOS ###########################")
-            print("1. Preorden-Grafica")
-            print("2. Inorden-Grafica")
-            print("3. Postorden-Grafica")
-            print("4. Preorden-Consola")
-            print("5. Inorden-Consola")
-            print("6. Postorden-Consola")
-            print("7. Regresar")
+            print("1. Preorden")
+            print("2. Inorden")
+            print("3. Portorden")
+            print("4. Regresar")
             opcion2 = input()
             if opcion2 == '1':
                 arbol.getGraphPreo()
+                arbol.preorden()
                 self.reportesTree()
             elif opcion2 == '2':
                 arbol.getGraphIno()
+                arbol.inorden()
                 self.reportesTree()
             elif opcion2 == '3':
                 arbol.getGraphPoso()
+                arbol.posorden()
                 self.reportesTree()
             elif opcion2 == '4':
-                arbol.preorden()
-                self.reportesTree()
-            elif opcion2 == '5':
-                arbol.inorden()
-                self.reportesTree()
-            elif opcion2 == '6':
-                arbol.posorden()
-                self.reportesTree()        
-            elif opcion2 == '7':
                 self.reportesTree()
             else:
                 self.reportesTree()

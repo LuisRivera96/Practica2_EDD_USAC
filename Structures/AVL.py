@@ -41,12 +41,12 @@ class AVL:
     def getHeight(self,RAIZ):
         if RAIZ is None:
             return 0
-        return RAIZ.ALTURA
+        return RAIZ.ALTURA 
 
     def getBalance(self,RAIZ):
         if RAIZ is None:
             return 0
-        return self.getHeight(RAIZ.LEFT) - self.getHeight(RAIZ.RIGHT)                
+        return self.getHeight(RAIZ.LEFT) - self.getHeight(RAIZ.RIGHT)              
 
     #BUSQUEDA
     def Busqueda(self,CARNE):
@@ -66,16 +66,17 @@ class AVL:
 
     #RECORRIDOS
     #########################INORDEN#########################
-    inor = "INICIO-> "
+    
     def inorden(self):
-        self.inordenR(self.root)
-    def inordenR(self,ROOT):
+        inor = ""
+        self.inordenR(self.root,inor) 
+    def inordenR(self,ROOT,CADENA):
         if ROOT is not None:
-            self.inordenR(ROOT.LEFT)
-            inor = inor + ROOT.CARNE + "-" + ROOT.NAME + "-> "
-            self.inordenR(ROOT.RIGHT)
-        inor = inor + " ->FIN"    
-        print(inor)
+            self.inordenR(ROOT.LEFT,CADENA)
+            CADENA =  ROOT.CARNE + "-" + ROOT.NAME + "-> "
+            print(CADENA,end="")
+            self.inordenR(ROOT.RIGHT,CADENA)
+             
 
     def gInorden(self,ROOT):
         DotInor = ""
@@ -85,12 +86,22 @@ class AVL:
             DotInor = DotInor + self.gInorden(ROOT.RIGHT)
         return DotInor
 
+    def gInordenEnla(self,ROOT):
+        DotInor = ""
+        if ROOT is not None:
+            DotInor = DotInor + self.gInordenEnla(ROOT.LEFT)
+            DotInor = DotInor + ROOT.CARNE + ";\n"
+            DotInor = DotInor + ROOT.CARNE + " -> "    
+            DotInor = DotInor + self.gInordenEnla(ROOT.RIGHT)
+        return DotInor
+
     def getGraphIno(self):
         Dot = ""
         Dot = Dot + "digraph BLOCK{\n"
         Dot = Dot + "label=\"Inorden\";\n"
         Dot = Dot + "rankdir=\"LR\";\n"
-        Dot = Dot + self.gInorden(self.root)
+        Dot = Dot + self.gInorden(self.root) 
+        Dot = Dot + self.gInordenEnla(self.root)
         Dot = Dot + "}"
         f = open('INORDEN.dot','w')
         f.write(Dot)
@@ -100,16 +111,18 @@ class AVL:
 
     ##############################################################
     #########################PREORDEN#########################
-    pre = "INICIO-> "
+    
     def preorden(self):
-        self.preordenR(self.root)
-    def preordenR(self,ROOT):
+        pre = ""
+        self.preordenR(self.root,pre) 
+        
+    def preordenR(self,ROOT,CADENA):
         if ROOT is not None:
-            pre = pre + ROOT.CARNE + "-" + ROOT.NAME + "-> "
-            self.preordenR(ROOT.LEFT)
-            self.preordenR(ROOT.RIGHT)
-        pre = pre + " ->FIN"    
-        print(pre)
+            CADENA =   ROOT.CARNE + "-" + ROOT.NAME + "-> "
+            print(CADENA,end="")
+            self.preordenR(ROOT.LEFT,CADENA)
+            self.preordenR(ROOT.RIGHT,CADENA)   
+        
 
     def gPreorden(self,ROOT):
         DotPreor = ""
@@ -119,12 +132,23 @@ class AVL:
             DotPreor = DotPreor + self.gPreorden(ROOT.RIGHT)
         return DotPreor
 
+    def gPreordenEnla(self,ROOT):
+        DotPreor = ""
+        if ROOT is not None:
+            DotPreor = DotPreor + ROOT.CARNE + ";\n"
+            DotPreor = DotPreor + ROOT.CARNE + " -> "
+            DotPreor = DotPreor + self.gPreordenEnla(ROOT.LEFT)
+            DotPreor = DotPreor + self.gPreordenEnla(ROOT.RIGHT)
+        return DotPreor
+        
+
     def getGraphPreo(self):
         Dot = ""
         Dot = Dot + "digraph BLOCK{\n"
         Dot = Dot + "label=\"Preorden\";\n"
         Dot = Dot + "rankdir=\"LR\";\n"
-        Dot = Dot + self.gPreorden(self.root)
+        Dot = Dot + self.gPreorden(self.root) 
+        Dot = Dot + self.gPreordenEnla(self.root)
         Dot = Dot + "}"
         f = open('PREORDEN.dot','w')
         f.write(Dot)
@@ -134,16 +158,18 @@ class AVL:
 
     ##############################################################
     #########################POSTORDEN#########################
-    pos = "INICIO-> "
+    
     def posorden(self):
-        self.posordenR(self.root)
-    def posordenR(self,ROOT):
+        pos = ""
+        self.posordenR(self.root,pos)
+
+    def posordenR(self,ROOT,CADENA):
         if ROOT is not None:
-            self.posordenR(ROOT.LEFT)
-            self.posordenR(ROOT.RIGHT)
-            pos = pos + ROOT.CARNE + "-" + ROOT.NAME + "-> "
-        pos = pos + " ->FIN"    
-        print(pos)
+            self.posordenR(ROOT.LEFT,CADENA)
+            self.posordenR(ROOT.RIGHT,CADENA)
+            CADENA =  ROOT.CARNE + "-" + ROOT.NAME + "-> "
+            print(CADENA,end="")  
+        
 
     def gPosorden(self,ROOT):
         DotPosor = ""
@@ -153,12 +179,23 @@ class AVL:
             DotPosor = DotPosor + ROOT.CARNE + "[label=\""+ ROOT.CARNE +"\\n"+ROOT.NAME+"\"];\n"
         return DotPosor
 
+    def gPosordenEnla(self,ROOT):
+        DotPosor = ""
+        if ROOT is not None:
+            DotPosor = DotPosor + self.gPosordenEnla(ROOT.LEFT)
+            DotPosor = DotPosor + self.gPosordenEnla(ROOT.RIGHT)
+            DotPosor = DotPosor + ROOT.CARNE + ";\n"
+            DotPosor = DotPosor + ROOT.CARNE + " -> "
+        return DotPosor
+
+
     def getGraphPoso(self):
         Dot = ""
         Dot = Dot + "digraph BLOCK{\n"
         Dot = Dot + "label=\"Postorden\";\n"
         Dot = Dot + "rankdir=\"LR\";\n"
-        Dot = Dot + self.gPosorden(self.root)
+        Dot = Dot + self.gPosorden(self.root) 
+        Dot = Dot + self.gPosordenEnla(self.root)
         Dot = Dot + "}"
         f = open('POSORDEN.dot','w')
         f.write(Dot)
@@ -174,9 +211,9 @@ class AVL:
         if ROOT is not None:
             if ROOT.RIGHT is not None or ROOT.LEFT is not None:
                 Dot = Dot + str(ROOT.CARNE) + ":f" + str(ROOT.CARNE) + "[id=" + str(ROOT.CARNE) + ", color=\"blue\"]; \n"
-                Dot = Dot + str(ROOT.CARNE) + "[label=\" <N " + str(ROOT.CARNE)+ " I> | <f" + str(ROOT.CARNE) + "> " + str(ROOT.CARNE)+ "\\n" + ROOT.NAME + "\\n" + str(ROOT.ALTURA) + "\\n" + str(ROOT.FE)  + " | <f" + str(ROOT.CARNE) + "D> \" shape=\"record\"];\n"
+                Dot = Dot + str(ROOT.CARNE) + "[label=\" <N " + str(ROOT.CARNE)+ " I> | <f" + str(ROOT.CARNE) + "> " +"Carne: " +str(ROOT.CARNE)+ "\\n" + "Nombre: "+ROOT.NAME + "\\n" + "Altura: "+str(ROOT.ALTURA) + "\\n" + "FE: "+str(ROOT.FE)   + " | <f" + str(ROOT.CARNE) + "D> \" shape=\"record\"];\n"
             else:
-                Dot = Dot + str(ROOT.CARNE) + ":f " + str(ROOT.CARNE) + "[label=\"" + str(ROOT.CARNE)+ "\\n" + ROOT.NAME + "\\n" + str(ROOT.ALTURA) + "\\n" + str(ROOT.FE) + "\", color=\"blue\" shape=\"rectangle\"]; \n"
+                Dot = Dot + str(ROOT.CARNE) + ":f " + str(ROOT.CARNE) + "[label=\"" +"Carne: " +str(ROOT.CARNE)+ "\\n" + "Nombre: "+ROOT.NAME + "\\n" + "Altura: "+str(ROOT.ALTURA) + "\\n" + "FE: "+str(ROOT.FE) + "\", color=\"blue\" shape=\"rectangle\"]; \n"
 
             a = self.graficar(ROOT.LEFT)
             if a is not "":

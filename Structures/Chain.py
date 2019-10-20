@@ -23,9 +23,8 @@ class Chain:
             self.head = bloque
             self.end = bloque
             self.head.next = None
-            self.end.next = None
             self.head.previous = None
-            self.end.previous = None
+            
         else:
             self.end.next = bloque
             bloque.previous = self.end
@@ -50,12 +49,12 @@ class Chain:
             temp = self.head
             count = 0
             while temp.next is not None:
-                f.write('node{} [label=\"Class = {}'+'\\n'+'TimeStamp={}'+'\\n'+'PHASH={}'+'\\n'+'HASH={} \"];\n'.format(count,temp.CLASS,temp.TIMESTAMP,temp.PREVIOUSHASH,temp.HASH))
+                f.write('node{} [label=\"Class = {}'.format(count,temp.CLASS)+'\\n'+'TimeStamp={}'.format(temp.TIMESTAMP)+'\\n'+'PHASH={}'.format(temp.PREVIOUSHASH)+'\\n'+'HASH={} \"];\n'.format(temp.HASH))
                 count+=1
                 f.write('node{} -> node{};\n'.format(count-1,count))
                 f.write('node{} -> node{};\n'.format(count,count-1))
                 temp = temp.next
-            f.write('node{} [label=\"Class = {}'+'\\n'+'TimeStamp={}'+'\\n'+'PHASH={}'+'\\n'+'HASH={} \"];\n'.format(count,temp.CLASS,temp.TIMESTAMP,temp.PREVIOUSHASH,temp.HASH))
+            f.write('node{} [label=\"Class = {}'.format(count,temp.CLASS)+'\\n'+'TimeStamp={}'.format(temp.TIMESTAMP)+'\\n'+'PHASH={}'.format(temp.PREVIOUSHASH)+'\\n'+'HASH={} \"];\n'.format(temp.HASH))
             f.write('}')
             f.close()
             os.system('dot Blockchain.dot -Tpng -o Blockchain.png')
