@@ -14,3 +14,7 @@ Incluye:
 -Arbol Binario de Busqueda(AVL falso)
 -Recorrido del Arbol
 -Lista Doblemente Enlazada(Cadena)
+
+NOTA: 100/100
+
+"La lectura de archivos .csv puede fallar ya que solo lee archivos sin espacios ni saltos de linea"
